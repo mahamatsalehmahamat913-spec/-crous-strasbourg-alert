@@ -6,7 +6,8 @@ CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 
 def envoyer_message(message):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    requests.post(
+
+    response = requests.post(
         url,
         data={
             "chat_id": CHAT_ID,
@@ -14,6 +15,13 @@ def envoyer_message(message):
         },
         timeout=15
     )
+
+    print("Réponse Telegram :", response.text)
+    response.raise_for_status()
+
+    if not response.json().get("ok"):
+        raise Exception(f"Telegram a refusé le message : {response.text}")
+
 
 if __name__ == "__main__":
     envoyer_message(
