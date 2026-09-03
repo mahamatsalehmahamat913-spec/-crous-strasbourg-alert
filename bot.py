@@ -44,11 +44,13 @@ def rechercher_logements():
 
         texte = lien.get_text(" ", strip=True)
 
-        if texte:
-            logements.append(
-                f"🏠 {texte}\n"
-                f"https://trouverunlogement.lescrous.fr{href}"
-            )
+        if "STRASBOURG" not in texte.upper():
+            continue
+
+        logements.append(
+            f"🏠 {texte}\n"
+            f"https://trouverunlogement.lescrous.fr{href}"
+        )
 
     return list(dict.fromkeys(logements))
 
@@ -56,7 +58,12 @@ def rechercher_logements():
 if __name__ == "__main__":
     logements = rechercher_logements()
 
-    envoyer_message(
-        f"🔎 Test CROUS Strasbourg\n\n"
-        f"Nombre de logements trouvés : {len(logements)}"
+    message = (
+        f"📍 CROUS STRASBOURG\n\n"
+        f"🏠 Logements trouvés : {len(logements)}"
     )
+
+    if logements:
+        message += "\n\n" + "\n\n".join(logements[:10])
+
+    envoyer_message(message)
